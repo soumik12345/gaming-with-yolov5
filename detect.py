@@ -27,6 +27,7 @@ Usage - formats:
 import argparse
 import os
 import sys
+import pyautogui
 from pathlib import Path
 
 import torch
@@ -207,12 +208,14 @@ def run(
                                 label + " Down",
                                 color=colors(c, True),
                             )
+                            pyautogui.press("down")
                         elif xywh[1] < 0.33:
                             annotator.box_label(
                                 xyxy,
                                 label + " Up",
                                 color=colors(c, True),
                             )
+                            pyautogui.press("up")
                         else:
                             annotator.box_label(
                                 xyxy,
