@@ -38,3 +38,7 @@ thop  # FLOPs computation
 # albumentations>=1.0.3
 # pycocotools>=2.0  # COCO mAP
 # roboflow
+
+# Project-specific ----------------------------
+wandb==0.12.21
+PyAutoGUI==0.9.53
