@@ -28,6 +28,8 @@ import argparse
 import os
 import sys
 import pyautogui
+import wandb
+from glob import glob
 from pathlib import Path
 
 import torch
@@ -63,6 +65,7 @@ from utils.torch_utils import select_device, time_sync
 @torch.no_grad()
 def run(
     weights=ROOT / "yolov5s.pt",  # model.pt path(s)
+    artifact=None, # WandB model artifact
     source=ROOT / "data/images",  # file/dir/URL/glob, 0 for webcam
     data=ROOT / "data/coco128.yaml",  # dataset.yaml path
     imgsz=(640, 640),  # inference size (height, width)
@@ -89,6 +92,13 @@ def run(
     half=False,  # use FP16 half-precision inference
     dnn=False,  # use OpenCV DNN for ONNX inference
 ):
+    
+    if artifact is not None:
+        api = wandb.Api()
+        artifact = api.artifact(artifact, type="model")
+        artifact_dir = artifact.download()
+        weights = glob(os.path.join(artifact_dir, "*.pt"))[0]
+
     source = str(source)
     save_img = not nosave and not source.endswith(".txt")  # save inference images
     is_file = Path(source).suffix[1:] in (IMG_FORMATS + VID_FORMATS)
@@ -304,6 +314,12 @@ def parse_opt():
         nargs="+",
         type=str,
         default=ROOT / "yolov5s.pt",
+        help="model path(s)",
+    )
+    parser.add_argument(
+        "--artifact",
+        type=str,
+        default=None,
         help="model path(s)",
     )
     parser.add_argument(
