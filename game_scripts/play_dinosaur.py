@@ -36,7 +36,8 @@ import torch
 import torch.backends.cudnn as cudnn
 
 FILE = Path(__file__).resolve()
-ROOT = FILE.parents[0]  # YOLOv5 root directory
+ROOT = FILE.parents[1]  # YOLOv5 root directory
+print(ROOT)
 if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))  # add ROOT to PATH
 ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
@@ -212,14 +213,14 @@ def run(
                             if hide_labels
                             else (names[c] if hide_conf else f"{names[c]} {conf:.2f}")
                         )
-                        if xywh[1] > 0.66:
+                        if xywh[1] > 0.53:
                             annotator.box_label(
                                 xyxy,
                                 label + " Down",
                                 color=colors(c, True),
                             )
                             pyautogui.press("down")
-                        elif xywh[1] < 0.33:
+                        elif xywh[1] < 0.47:
                             annotator.box_label(
                                 xyxy,
                                 label + " Up",
