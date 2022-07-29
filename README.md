@@ -12,7 +12,8 @@ This project aims at demonstrating the potential for using YOLOv5 for developing
 python game_scripts/play_dinosaur.py \
         --source 0 \
         --conf-thres 0.48 \
-        --artifact "wandb/hand-detection-yolov5/run_85dp129g_model:v0"
+        --half \
+        --artifact "wandb/hand-detection-yolov5/run_5knp63d6_model:v0"
 ```
 
 # Racing Game [WIP]
