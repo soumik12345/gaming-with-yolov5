@@ -60,7 +60,7 @@ from utils.general import (
     xyxy2xywh,
 )
 from utils.plots import Annotator, colors, save_one_box
-from utils.torch_utils import select_device, time_sync
+from utils.torch_utils import select_device, time_sync, prune
 
 
 @torch.no_grad()
@@ -117,6 +117,7 @@ def run(
     # Load model
     device = select_device(device)
     model = DetectMultiBackend(weights, device=device, dnn=dnn, data=data, fp16=half)
+    prune(model, 0.33)
     stride, names, pt = model.stride, model.names, model.pt
     imgsz = check_img_size(imgsz, s=stride)  # check image size
 
@@ -213,14 +214,14 @@ def run(
                             if hide_labels
                             else (names[c] if hide_conf else f"{names[c]} {conf:.2f}")
                         )
-                        if xywh[1] > 0.53:
+                        if xywh[1] > 0.6:
                             annotator.box_label(
                                 xyxy,
                                 label + " Down",
                                 color=colors(c, True),
                             )
                             pyautogui.press("down")
-                        elif xywh[1] < 0.47:
+                        elif xywh[1] < 0.4:
                             annotator.box_label(
                                 xyxy,
                                 label + " Up",
@@ -246,15 +247,15 @@ def run(
             im0 = annotator.result()
             im0 = cv2.line(
                 im0,
-                (0, int(0.33 * im0.shape[0])),
-                (im0.shape[1], int(0.33 * im0.shape[0])),
+                (0, int(0.4 * im0.shape[0])),
+                (im0.shape[1], int(0.4 * im0.shape[0])),
                 (0, 255, 0),
                 1,
             )
             im0 = cv2.line(
                 im0,
-                (0, int(0.66 * im0.shape[0])),
-                (im0.shape[1], int(0.66 * im0.shape[0])),
+                (0, int(0.6 * im0.shape[0])),
+                (im0.shape[1], int(0.6 * im0.shape[0])),
                 (0, 255, 0),
                 1,
             )
